@@ -465,7 +465,7 @@ default['openstack']['object-storage']['object-server']['replicator']['reclaim_a
 # gholt's repository.
 # values:  package, git
 default['openstack']['object-storage']['swauth_source'] = 'package'
-default['openstack']['object-storage']['swauth_repository'] = 'https://github.com/gholt/swauth.git'
+default['openstack']['object-storage']['swauth_repository'] = 'https://github.com/openstack/swauth.git'
 default['openstack']['object-storage']['swauth_version'] = '1.0.8'
 
 #------------------
