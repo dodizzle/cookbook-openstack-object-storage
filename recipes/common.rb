@@ -77,14 +77,14 @@ directory '/etc/swift' do
 end
 
 # determine hash
-if node['openstack']['object-storage']['swift_secret_databag_name'].nil?
+if node['openstack']['object-storage']['swift_secret_databag_item'].nil?
   swift_hash_path_prefix = node['openstack']['object-storage']['swift_hash_path_prefix']
   swift_hash_path_prefix = get_password 'token', 'swift_hash_path_prefix' if swift_hash_path_prefix.nil?
   swift_hash_path_suffix = node['openstack']['object-storage']['swift_hash_path_suffix']
   swift_hash_path_suffix = get_password 'token', 'swift_hash_path_suffix' if swift_hash_path_suffix.nil?
 else
   # Deprecated, else case to be removed.
-  swift_secrets = Chef::EncryptedDataBagItem.load node['openstack']['secrets']['secrets_data_bag'], node['openstack']['object-storage']['swift_secret_databag_item']
+  swift_secrets = Chef::EncryptedDataBagItem.load node['openstack']['secret']['secrets_data_bag'], node['openstack']['secret']['swift_secret_databag_item']
   swift_hash_path_prefix = swift_secrets['swift_hash']
 end
 
