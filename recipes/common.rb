@@ -73,7 +73,7 @@ directory '/etc/swift' do
   action :create
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00700
+  mode 0o0700
 end
 
 # determine hash
@@ -84,7 +84,7 @@ if node['openstack']['object-storage']['swift_secret_databag_name'].nil?
   swift_hash_path_suffix = get_password 'token', 'swift_hash_path_suffix' if swift_hash_path_suffix.nil?
 else
   # Deprecated, else case to be removed.
-  swift_secrets = Chef::EncryptedDataBagItem.load 'secrets', node['openstack']['object-storage']['swift_secret_databag_name']
+  swift_secrets = Chef::EncryptedDataBagItem.load node['openstack']['secrets']['secrets_data_bag'], node['openstack']['object-storage']['swift_secret_databag_item']
   swift_hash_path_prefix = swift_secrets['swift_hash']
 end
 
@@ -92,7 +92,7 @@ template '/etc/swift/swift.conf' do
   source 'swift.conf.erb'
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00600
+  mode 0o0600
   variables(
     swift_hash_path_prefix: swift_hash_path_prefix,
     swift_hash_path_suffix: swift_hash_path_suffix
@@ -117,7 +117,7 @@ template '/etc/swift/pull-rings.sh' do
   source 'pull-rings.sh.erb'
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00700
+  mode 0o0700
   variables(
     builder_ip: git_builder_ip,
     service_prefix: platform_options['service_prefix']

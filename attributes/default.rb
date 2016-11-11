@@ -80,7 +80,7 @@ default['openstack']['object-storage']['swift_hash_path_suffix'] = nil
 # This value is set in bytes. Setting it to lower than 1MiB will cause
 # some tests to fail. It is STRONGLY recommended to leave this value at
 # the default (5 * 2**30 + 2).
-default['openstack']['object-storage']['max_file_size'] = 5368709122
+default['openstack']['object-storage']['max_file_size'] = 5_368_709_122
 # max_meta_name_length is the max number of bytes in the utf8 encoding
 # of the name portion of a metadata header.
 default['openstack']['object-storage']['max_meta_name_length'] = 128
@@ -105,10 +105,10 @@ default['openstack']['object-storage']['max_header_size'] = 8192
 default['openstack']['object-storage']['max_object_name_length'] = 1024
 # container_listing_limit is the default (and max) number of items
 # returned for a container listing request
-default['openstack']['object-storage']['container_listing_limit'] = 10000
+default['openstack']['object-storage']['container_listing_limit'] = 10_000
 # account_listing_limit is the default (and max) number of items returned
 # for an account listing request
-default['openstack']['object-storage']['account_listing_limit'] = 10000
+default['openstack']['object-storage']['account_listing_limit'] = 10_000
 # max_account_name_length is the max number of bytes in the utf8 encoding
 # of an account name
 default['openstack']['object-storage']['max_account_name_length'] = 256
@@ -122,7 +122,7 @@ default['openstack']['object-storage']['max_container_name_length'] = 256
 #   "swift_hash_path_prefix"
 #   "swift_hash_path_suffix"
 #   "swift_authkey"
-#   "dispersion_auth_key"
+#   "dispersion_auth_key"``
 #   "dispersion_auth_user"
 
 # The follow swift specific databag support is DEPRECATED.
@@ -135,6 +135,7 @@ default['openstack']['object-storage']['max_container_name_length'] = 256
 #   "dispersion_auth_user": "test:test",
 #   "dispersion_auth_key": "test"
 # }
+default['openstack']['secrets']['secrets_data_bag'] = nil
 default['openstack']['object-storage']['swift_secret_databag_name'] = nil
 
 #--------------------
@@ -278,7 +279,8 @@ default['openstack']['object-storage']['disk_test_filter'] = [
   'candidate =~ /(sd|hd|xvd|vd)(?!a$)[a-z]+/',
   "File.exist?('/dev/' + candidate)",
   "not system('/sbin/parted /dev/' + candidate + ' -s print | grep linux-swap')",
-  "not info.has_key?('removable') or info['removable'] == 0.to_s"]
+  "not info.has_key?('removable') or info['removable'] == 0.to_s"
+]
 
 #-------------------
 # template overrides
@@ -455,7 +457,7 @@ default['openstack']['object-storage']['object-server']['replicator']['run_pause
 
 # Time elapsed in seconds before an object can be reclaimed. The default is
 # 604800 seconds.
-default['openstack']['object-storage']['object-server']['replicator']['reclaim_age'] = 604800
+default['openstack']['object-storage']['object-server']['replicator']['reclaim_age'] = 604_800
 
 #------------------
 # swauth source
