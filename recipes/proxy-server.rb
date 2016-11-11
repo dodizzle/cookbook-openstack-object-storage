@@ -108,12 +108,12 @@ service proxy_service_name do
 end
 
 # determine authkey to use
-if node['openstack']['object-storage']['1swift_secret_databag_item'].nil?
+if node['openstack']['object-storage']['swift_secret_databag_item'].nil?
   authkey = node['openstack']['object-storage']['authkey']
   authkey = get_password 'token', 'swift_authkey' if authkey.nil?
 else
   # Deprecated, else case to be removed.
-  swift_secrets = Chef::EncryptedDataBagItem.load 'secrets', node['openstack']['object-storage']['1swift_secret_databag_item']
+  swift_secrets = Chef::EncryptedDataBagItem.load 'secrets', node['openstack']['object-storage']['swift_secret_databag_item']
   authkey = swift_secrets['swift_authkey']
 end
 

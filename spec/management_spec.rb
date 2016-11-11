@@ -35,8 +35,8 @@ describe 'openstack-object-storage::management-server' do
           expect(chef_run.node['openstack']['object-storage']['auth_url']).to eq('http://127.0.0.1:8080/auth/v1.0')
         end
 
-        it 'uses default attribute value for 1swift_secret_databag_item' do
-          expect(chef_run.node['openstack']['object-storage']['1swift_secret_databag_item']).to be_nil
+        it 'uses default attribute value for swift_secret_databag_item' do
+          expect(chef_run.node['openstack']['object-storage']['swift_secret_databag_item']).to be_nil
         end
 
         it 'uses default attribute value for dispersion auth_user' do
@@ -69,9 +69,9 @@ describe 'openstack-object-storage::management-server' do
           end
 
           before do
-            node.set['openstack']['object-storage']['1swift_secret_databag_item'] = '1swift_secret_databag_item_value'
+            node.set['openstack']['object-storage']['swift_secret_databag_item'] = 'swift_secret_databag_item_value'
             allow(Chef::EncryptedDataBagItem).to receive(:load)
-              .with('secrets', '1swift_secret_databag_item_value')
+              .with('secrets', 'swift_secret_databag_item_value')
               .and_return(swift_secrets)
           end
 
@@ -84,7 +84,7 @@ describe 'openstack-object-storage::management-server' do
 
         context 'without swift databag' do
           before do
-            node.set['openstack']['object-storage']['1swift_secret_databag_item'] = nil
+            node.set['openstack']['object-storage']['swift_secret_databag_item'] = nil
           end
 
           %w(user key).each do |attr|

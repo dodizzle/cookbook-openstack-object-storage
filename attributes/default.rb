@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# swift_secret_databag_item# encoding: UTF-8
 #
 # Cookbook Name:: openstack-object-storage
 # Attributes:: default
@@ -135,7 +135,7 @@ default['openstack']['object-storage']['max_container_name_length'] = 256
 #   "dispersion_auth_user": "test:test",
 #   "dispersion_auth_key": "test"
 # }
-default['openstack']['secrets']['secrets_data_bag'] = nil
+default['openstack']['secret']['secrets_data_bag'] = nil
 default['openstack']['object-storage']['swift_secret_databag_item'] = nil
 
 #--------------------
