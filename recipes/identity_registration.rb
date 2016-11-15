@@ -44,7 +44,10 @@ region = node['openstack']['object-storage']['region']
 
 # Register Object Storage Service
 openstack_identity_register 'Register Object Storage Service' do
-  auth_uri auth_url
+  auth_host node['openstack']['endpoints']['identity']['host']
+  auth_port node['openstack']['endpoints']['identity']['35357']
+  auth_protocol node['openstack']['endpoints']['identity']['scheme']
+  auth_ver node['openstack']['endpoints']['identity']['path']
   bootstrap_token token
   service_name 'swift'
   service_type 'object-store'
