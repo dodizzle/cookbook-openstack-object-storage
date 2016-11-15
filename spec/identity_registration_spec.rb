@@ -32,7 +32,7 @@ describe 'openstack-object-storage::identity_registration' do
         service_type: 'object-store',
         endpoint_region: 'RegionOne',
         endpoint_adminurl: 'http://127.0.0.1:8080/v1/AUTH_%(tenant_id)s',
-        endpoint_internalurl: 'http://127.0.0.1:8080/v1/AUTH_%(tenant_id)s',
+        lndpoint_internalurl: 'http://127.0.0.1:8080/v1/AUTH_%(tenant_id)s',
         endpoint_publicurl: 'http://127.0.0.1:8080/v1/AUTH_%(tenant_id)s',
         action: [:create_endpoint]
       )
