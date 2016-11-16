@@ -27,10 +27,16 @@ class ::Chef::Recipe # rubocop:disable Documentation
   include ::Openstack
 end
 
-identity_admin_endpoint = admin_endpoint 'identity-admin'
+#auth_url = node['openstack']['object-storage']['auth_url']
+
+# define the endpoints to register for the keystone identity service
+identity_admin_endpoint = admin_endpoint 'identity'
+identity_internal_endpoint = internal_endpoint 'identity'
+identity_public_endpoint = public_endpoint 'identity'
+auth_url = ::URI.decode identity_admin_endpoint.to_s
 
 token = get_password 'token', 'openstack_identity_bootstrap_token'
-auth_url = ::URI.decode identity_admin_endpoint.to_s
+
 
 admin_api_endpoint = admin_endpoint 'object-storage-api'
 internal_api_endpoint = internal_endpoint 'object-storage-api'
@@ -43,13 +49,12 @@ service_role = node['openstack']['object-storage']['service_role']
 region = node['openstack']['object-storage']['region']
 
 # Register Object Storage Service
-openstack_identity_register 'Register Object Storage Service' do
+openstack_identity_register 'Register Identity Service' do
   auth_uri auth_url
   bootstrap_token token
   service_name 'swift'
-  service_type 'object-store'
+  service_type 'object-storage'
   service_description 'Swift Service'
-
   action :create_service
 end
 
@@ -57,12 +62,11 @@ end
 openstack_identity_register 'Register Object Storage Endpoint' do
   auth_uri auth_url
   bootstrap_token token
-  service_type 'object-store'
+  service_type 'object-storage'
   endpoint_region region
   endpoint_adminurl admin_api_endpoint.to_s
   endpoint_internalurl internal_api_endpoint.to_s
   endpoint_publicurl public_api_endpoint.to_s
-
   action :create_endpoint
 end
 
@@ -72,7 +76,6 @@ openstack_identity_register 'Register Service Tenant' do
   bootstrap_token token
   tenant_name service_tenant_name
   tenant_description 'Service Tenant'
-
   action :create_tenant
 end
 
