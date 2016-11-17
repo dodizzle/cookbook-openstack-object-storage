@@ -163,7 +163,7 @@ end
 devices = []
 storage_nodes = Chef::Search::Query.new.search(:node, "chef_environment:#{node.chef_environment} AND roles:#{node['openstack']['object-storage']['object_server_chef_role']}")
 storage_nodes.each do |get_devices|
-  devices.push(get_devices['openstack']['object-storage']['state']['devs'])
+  p get_devices[:openstack][:object - storage][:state][:devs]
   puts 'DODIZZLE devices count => ' + devices.count
 end
 
