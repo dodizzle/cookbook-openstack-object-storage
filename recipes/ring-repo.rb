@@ -42,7 +42,7 @@ end
 
 execute 'create empty git repo' do
   cwd '/tmp'
-  umask 022
+  umask 0o22
   command "mkdir $$; cd $$; git init; echo \"backups\" \> .gitignore; #{git_config_email} ; #{git_config_name} ; git add .gitignore; git commit -m 'initial commit' --author='chef <chef@openstack>'; git push file:///#{platform_options['git_dir']}/rings master"
   user node['openstack']['object-storage']['user']
   action :nothing
@@ -52,14 +52,14 @@ directory 'git-directory' do
   path "#{platform_options['git_dir']}/rings"
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00755
+  mode 0o0755
   recursive true
   action :create
 end
 
 execute 'initialize git repo' do
   cwd "#{platform_options['git_dir']}/rings"
-  umask 022
+  umask 0o22
   user node['openstack']['object-storage']['user']
   command 'git init --bare && touch git-daemon-export-ok'
   creates "#{platform_options['git_dir']}/rings/config"
@@ -83,7 +83,7 @@ end
 cookbook_file '/etc/default/git-daemon' do
   owner 'root'
   group 'root'
-  mode 00644
+  mode 0o0644
   source 'git-daemon.default'
   action :create
   notifies :restart, 'service[git-daemon]', :immediately
@@ -93,7 +93,7 @@ end
 directory '/etc/swift/ring-workspace' do
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00755
+  mode 0o0755
   action :create
 end
 
@@ -104,7 +104,7 @@ execute 'checkout-rings' do # ~FC040
   creates '/etc/swift/ring-workspace/rings'
 end
 
-['account', 'container', 'object'].each do |ring_type|
+%w(account container object).each do |ring_type|
   part_power = ring_options['part_power']
   min_part_hours = ring_options['min_part_hours']
   replicas = ring_options['replicas']
@@ -159,11 +159,20 @@ bash 'rebuild-rings' do
   EOF
 end
 
-openstack_object_storage_ring_script '/etc/swift/ring-workspace/generate-rings.sh' do
-  owner node['openstack']['object-storage']['user']
-  group node['openstack']['object-storage']['group']
-  mode 00700
-  ring_path '/etc/swift/ring-workspace/rings'
-  action :ensure_exists
-  notifies :run, 'bash[rebuild-rings]', :immediate
+# search for storage nodes
+devices = []
+storage_nodes = Chef::Search::Query.new.search(:node, "chef_environment:#{node.chef_environment} AND roles:#{node['openstack']['object-storage']['object_server_chef_role']}")
+storage_nodes.each do |get_devices|
+  devices.push(get_devices['openstack']['object-storage']['state']['devs'])
+  puts 'DODIZZLE devices count => ' + devices.count
 end
+
+%w(account container object).each do |_storage_type|
+  puts 'storage_type'
+end
+
+# for each storage node get device, ipaddress and port #
+# for each device run
+# swift-ring-builder container.builder add --region 1 --zone 1 --ip 17.219.201.31 --port 6001 --device sdb1 --weight 100
+# then rebuild the ring
+# notifies :run, 'bash[rebuild-rings]', :immediate
