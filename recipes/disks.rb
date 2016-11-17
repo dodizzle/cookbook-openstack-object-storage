@@ -44,9 +44,7 @@ puts 'disk_enum_expr'
 p disk_enum_expr
 disk_test_filter = node['openstack']['object-storage']['disk_test_filter']
 
-disks = locate_disks(disk_enum_expr, disk_test_filter)
-puts 'disks'
-p disks
+# disks = locate_disks(disk_enum_expr, disk_test_filter)
 
 Chef::Log.info("Located disks: #{disks}")
 
