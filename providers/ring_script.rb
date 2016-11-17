@@ -41,7 +41,7 @@ def generate_script # rubocop:disable Metrics/AbcSize
     if ::File.exist?("#{ring_path}/#{which}.builder")
       IO.popen("su swift -c 'swift-ring-builder #{ring_path}/#{which}.builder'") do |pipe|
         ring_data[:raw][which] = pipe.readlines
-        Chef::Log.debug("#{which} Ring data raw:\n#{PP.pp(ring_data[:raw][which], '')}")
+        Chef::Log.info("#{which} Ring data raw:\n#{PP.pp(ring_data[:raw][which], '')}")
         ring_data[:parsed][which] = parse_ring_output(ring_data[:raw][which])
         Chef::Log.info("#{which} Ring data parsed:\n#{PP.pp(ring_data[:parsed][which], '')}")
 
