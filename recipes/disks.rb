@@ -61,7 +61,7 @@ end
 #
 # additionally, there is an implicit assumption that bind ports
 # for all object/container/account services are on the same net
-disk_ip = locate_ip_in_cidr(node['openstack']['object-storage']['network']['object-cidr'], node)
+disk_ip = node['ipaddress']
 
 openstack_object_storage_mounts '/srv/node' do
   action :ensure_exists
