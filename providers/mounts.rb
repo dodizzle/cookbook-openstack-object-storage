@@ -132,7 +132,7 @@ action :ensure_exists do
       end
     end
 
-    mt = Mount(mount_path) do
+    mt = mount(mount_path) do
       device info['uuid']
       device_type :uuid
       options mount_options
