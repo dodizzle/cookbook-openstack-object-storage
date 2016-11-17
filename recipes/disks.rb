@@ -40,13 +40,18 @@ end
 end
 
 disk_enum_expr = node['openstack']['object-storage']['disk_enum_expr']
+puts 'disk_enum_expr'
+p disk_enum_expr
 disk_test_filter = node['openstack']['object-storage']['disk_test_filter']
 
 disks = locate_disks(disk_enum_expr, disk_test_filter)
+puts 'disks'
+p disks
 
 Chef::Log.info("Located disks: #{disks}")
 
 disks.each do |disk|
+  puts 'Disk => ' + disk
   openstack_object_storage_disk "/dev/#{disk}" do
     part [{ type: platform_options['disk_format'], size: :remaining }]
     action :ensure_exists
