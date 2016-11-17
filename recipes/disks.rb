@@ -40,13 +40,10 @@ end
 end
 
 disk_enum_expr = node['openstack']['object-storage']['disk_enum_expr']
-puts "ZZZZZZZZ   " + disk_enum_expr "ZZZZZZZZ"
-p knife cookbook delete openstack-object-storage
 disk_test_filter = node['openstack']['object-storage']['disk_test_filter']
 
 disks = locate_disks(disk_enum_expr, disk_test_filter)
-puts "ZZZZZZZZZZ " + disks + " ZZZZZZZZ"
-p disks
+
 Chef::Log.info("Located disks: #{disks}")
 
 disks.each do |disk|
