@@ -163,8 +163,8 @@ end
 devices = []
 storage_nodes = Chef::Search::Query.new.search(:node, "chef_environment:#{node.chef_environment} AND roles:#{node['openstack']['object-storage']['object_server_chef_role']}")
 storage_nodes.each do |_get_devices|
-  # p get_devices[:openstack][:object-storage][:state][:devs]
-  puts 'DODIZZLE devices count => ' + devices.count
+  puts get_devices[:hostname]
+  # puts 'DODIZZLE devices count => ' + devices.count
 end
 
 %w(account container object).each do |_storage_type|
