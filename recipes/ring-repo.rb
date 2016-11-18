@@ -21,7 +21,9 @@
 # This recipe creates a git ring repository on the management node
 # for purposes of ring synchronization
 #
-
+class Chef::Recipe
+  include FindDrives
+end
 platform_options = node['openstack']['object-storage']['platform']
 ring_options = node['openstack']['object-storage']['ring']
 git_config_email = "git config user.email 'chef@openstack.org'"
@@ -160,16 +162,10 @@ bash 'rebuild-rings' do
 end
 
 # search for storage nodes
+# using the find_drives library
 role = node['openstack']['object-storage']['object_server_chef_role']
-devices = []
-# get list of devices
-search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
-  devs = result['openstack']['object-storage']['state']['devs']
-  devices.push(devs)
-  count = devices.count
-  Chef::Log.info("Total devices found => #{count}")
-  p result
-end
+devices = find_storage_nodes(role)
+
 # build array of ip addresses and disks
 drives = []
 devices.each do |res|
@@ -184,13 +180,12 @@ end
 storage_services = { 'object' => '6000', 'container' => '6001', 'account' => '6002' }
 storage_services.each do |_k, _v|
   drives.each do |kk, _vv|
-    Chef::Log.info("Disks being added are: #{kk['device']}@#{kk['ip']}")
-    Chef::Log.info("swift-ring-builder #{_k}.builder add --region 1 --zone 1 --ip #{kk['ip']} --port #{_v} --device #{kk['device']} --weight 100")
+    execute 'add disks to ring' do
+      Chef::Log.info("Disks being added are: #{kk['device']}@#{kk['ip']}")
+      Chef::Log.info("swift-ring-builder #{_k}.builder add --region 1 --zone 1 --ip #{kk['ip']} --port #{_v} --device #{kk['device']} --weight 100")
+      command "/usr/bin/swift-ring-builder #{_k}.builder add --region 1 --zone 1 --ip #{kk['ip']} --port #{_v} --device #{kk['device']} --weight 100"
+    end
   end
 end
 
-# for each storage node get device, ipaddress and port #
-# for each device run
-# swift-ring-builder container.builder add --region 1 --zone 1 --ip 17.219.201.31 --port 6001 --device sdb1 --weight 100
-# then rebuild the ring
 # notifies :run, 'bash[rebuild-rings]', :immediate
