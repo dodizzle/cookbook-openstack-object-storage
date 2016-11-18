@@ -164,11 +164,11 @@ role = node['openstack']['object-storage']['object_server_chef_role']
 devices = []
 search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
   h_name = result[:hostname]
-  puts h_name
+  puts 'ZZZZZZZZZZZZZZZZZZ ' + h_name
 end
 
 %w(account container object).each do |_storage_type|
-  puts 'storage_type'
+  puts 'ZZZZZZZZZZZZZZZZ ' + _storage_type
 end
 
 # for each storage node get device, ipaddress and port #
