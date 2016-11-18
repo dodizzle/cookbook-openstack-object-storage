@@ -163,7 +163,7 @@ end
 role = node['openstack']['object-storage']['object_server_chef_role']
 drives = []
 # get list of devices
-result = search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
+search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
   devs = result['openstack']['object-storage']['state']['devs']
   devices.push(devs)
   count = devices.count
