@@ -163,6 +163,7 @@ end
 role = node['openstack']['object-storage']['object_server_chef_role']
 drives = []
 result = search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}")
+p result
 result.each do |res|
   res.each do |_k, v|
     device = v['device']
