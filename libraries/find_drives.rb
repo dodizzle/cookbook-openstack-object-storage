@@ -8,8 +8,9 @@ module FindDrives
     search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
       devs = result['openstack']['object-storage']['state']['devs']
       devices.push(devs)
-      count = devices.count
-      Chef::Log.info("Total devices found => #{count}")
-      return devices
+    end
+    count = devices.count
+    Chef::Log.info("Total devices found => #{count}")
+    devices
     end
 end
