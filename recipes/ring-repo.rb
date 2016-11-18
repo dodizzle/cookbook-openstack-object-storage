@@ -161,7 +161,7 @@ end
 
 # search for storage nodes
 role = node['openstack']['object-storage']['object_server_chef_role']
-drives = []
+devices = []
 # get list of devices
 search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
   devs = result['openstack']['object-storage']['state']['devs']
@@ -171,6 +171,7 @@ search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sor
   p result
 end
 # build array of ip addresses and disks
+drives = []
 devices.each do |res|
   res.each do |_k, v|
     device = v['device']
