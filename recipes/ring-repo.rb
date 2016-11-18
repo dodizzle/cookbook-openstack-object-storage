@@ -162,13 +162,20 @@ end
 # search for storage nodes
 role = node['openstack']['object-storage']['object_server_chef_role']
 drives = []
-result = search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}")
-p result
-result.each do |res|
+# get list of devices
+result = search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
+  devs = result['openstack']['object-storage']['state']['devs']
+  devices.push(devs)
+  count = devices.count
+  Chef::Log.info("Total devices found => #{count}")
+  p result
+end
+# build array of ip addresses and disks
+devices.each do |res|
   res.each do |_k, v|
     device = v['device']
     ip = v['ip']
-    # puts "device => #{device} & ip => #{ip}"
+    Chef::Log.info("device => #{device} & ip => #{ip}")
     drives.push('device' => device, 'ip' => ip)
   end
 end
@@ -176,8 +183,8 @@ end
 storage_services = { 'object' => '6000', 'container' => '6001', 'account' => '6002' }
 storage_services.each do |_k, _v|
   drives.each do |kk, _vv|
-    puts "Disks being added are: #{kk['device']}@#{kk['ip']}"
-    puts "swift-ring-builder #{_k}.builder add --region 1 --zone 1 --ip #{kk['ip']} --port #{_v} --device #{kk['device']} --weight 100"
+    Chef::Log.info("Disks being added are: #{kk['device']}@#{kk['ip']}")
+    Chef::Log.info("swift-ring-builder #{_k}.builder add --region 1 --zone 1 --ip #{kk['ip']} --port #{_v} --device #{kk['device']} --weight 100")
   end
 end
 
