@@ -160,11 +160,11 @@ bash 'rebuild-rings' do
 end
 
 # search for storage nodes
+role = node['openstack']['object-storage']['object_server_chef_role']
 devices = []
-storage_nodes = Chef::Search::Query.new.search(:node, "chef_environment:#{node.chef_environment} AND roles:#{node['openstack']['object-storage']['object_server_chef_role']}")
-storage_nodes.each do |_get_devices|
-  puts get_devices[:hostname]
-  # puts 'DODIZZLE devices count => ' + devices.count
+search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
+  h_name = result[:hostname]
+  puts h_name
 end
 
 %w(account container object).each do |_storage_type|
