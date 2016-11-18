@@ -161,17 +161,23 @@ end
 
 # search for storage nodes
 role = node['openstack']['object-storage']['object_server_chef_role']
-devices = []
-search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}").sort.each do |result|
-  devs = result['openstack']['object-storage']['state']['devs']
-  devices.push(devs)
-  count = devices.count
-  Chef::Log.info("devices count => #{count}")
-  p devices
+drives = []
+result = search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}")
+result.each do |res|
+  res.each do |_k, v|
+    device = v['device']
+    ip = v['ip']
+    # puts "device => #{device} & ip => #{ip}"
+    drives.push('device' => device, 'ip' => ip)
+  end
 end
 
-%w(account container object).each do |_storage_type|
-  Chef::Log.info("ZZZZZZZZZZZZZZZZ  + #{_storage_type}")
+storage_services = { 'object' => '6000', 'container' => '6001', 'account' => '6002' }
+storage_services.each do |_k, _v|
+  drives.each do |kk, _vv|
+    puts "Disks being added are: #{kk['device']}@#{kk['ip']}"
+    puts "swift-ring-builder #{_k}.builder add --region 1 --zone 1 --ip #{kk['ip']} --port #{_v} --device #{kk['device']} --weight 100"
+  end
 end
 
 # for each storage node get device, ipaddress and port #
