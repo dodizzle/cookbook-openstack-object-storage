@@ -129,38 +129,6 @@ end
   end
 end
 
-bash 'rebuild-rings' do
-  action :nothing
-  cwd '/etc/swift/ring-workspace/rings'
-  user node['openstack']['object-storage']['user']
-  code <<-EOF
-    set -x
-
-    # Should this be done?
-    git reset --hard
-    git clean -df
-
-    ../generate-rings.sh
-    for d in object account container; do swift-ring-builder ${d}.builder; done
-
-    add=0
-    if test -n "$(find . -maxdepth 1 -name '*gz' -print -quit)"
-    then
-        git add *builder *gz
-        add=1
-    else
-        git add *builder
-        add=1
-    fi
-    if [ $add -ne 0 ]
-    then
-        git commit -m "Autobuild of rings on $(date +%Y%m%d) by Chef" --author="chef <chef@openstack>"
-        git push
-    fi
-
-  EOF
-end
-
 # search for storage nodes
 # using the find_drives library
 role = node['openstack']['object-storage']['object_server_chef_role']
@@ -193,15 +161,6 @@ openstack_object_storage_ring_script '/etc/swift/ring-workspace/generate-rings.s
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
   mode 0o700
-  ring_path '/etc/swift/ring-workspace/rings'
-  action :ensure_exists
-  notifies :run, 'bash[rebuild-rings]', :immediate
-end
-
-openstack_object_storage_ring_script '/etc/swift/ring-workspace/generate-rings.sh' do
-  owner node['openstack']['object-storage']['user']
-  group node['openstack']['object-storage']['group']
-  mode 00700
   ring_path '/etc/swift/ring-workspace/rings'
   action :ensure_exists
   notifies :run, 'bash[rebuild-rings]', :immediate
