@@ -184,6 +184,7 @@ storage_services.each do |_k, _v|
       Chef::Log.info("Disks being added are: #{kk['device']}@#{kk['ip']}")
       Chef::Log.info("swift-ring-builder #{_k}.builder add --region 1 --zone 1 --ip #{kk['ip']} --port #{_v} --device #{kk['device']} --weight 100")
       command "/usr/bin/swift-ring-builder /etc/swift/ring-workspace/rings/#{_k}.builder add --region 1 --zone 1 --ip #{kk['ip']} --port #{_v} --device #{kk['device']} --weight 100"
+      not_if "/usr/bin/swift-ring-builder /etc/swift/ring-workspace/rings/#{_k}.builder | grep #{kk['ip']}| grep #{_v}| grep #{kk['device']} "
     end
   end
 end
