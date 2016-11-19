@@ -189,4 +189,20 @@ storage_services.each do |_k, _v|
   end
 end
 
-# notifies :run, 'bash[rebuild-rings]', :immediate
+openstack_object_storage_ring_script '/etc/swift/ring-workspace/generate-rings.sh' do
+  owner node['openstack']['object-storage']['user']
+  group node['openstack']['object-storage']['group']
+  mode 0o700
+  ring_path '/etc/swift/ring-workspace/rings'
+  action :ensure_exists
+  notifies :run, 'bash[rebuild-rings]', :immediate
+end
+
+openstack_object_storage_ring_script '/etc/swift/ring-workspace/generate-rings.sh' do
+  owner node['openstack']['object-storage']['user']
+  group node['openstack']['object-storage']['group']
+  mode 00700
+  ring_path '/etc/swift/ring-workspace/rings'
+  action :ensure_exists
+  notifies :run, 'bash[rebuild-rings]', :immediate
+end
