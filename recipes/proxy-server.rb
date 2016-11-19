@@ -25,21 +25,6 @@ class Chef::Recipe # rubocop:disable Documentation
   include ServiceUtils
 end
 
-if node.run_list.expand(node.chef_environment).recipes.include?('openstack-object-storage::setup')
-  Chef::Log.info('I ran the openstack-object-storage::setup so I will use my own swift passwords')
-else
-  setup_role = node['openstack']['object-storage']['setup_chef_role']
-  setup = search(:node, "chef_environment:#{node.chef_environment} AND roles:#{setup_role}")
-  if setup.length == 0
-    Chef::Application.fatal! 'You must have run the openstack-object-storage::setup recipe (on this or another node) before running the swift::proxy recipe on this node'
-  elsif setup.length == 1
-    Chef::Log.info "Found openstack-object-storage::setup node: #{setup[0].name}"
-    node.set['openstack']['object-storage']['service_pass'] = setup[0]['swift']['service_pass']
-  elsif setup.length > 1
-    Chef::Application.fatal! 'You have multiple nodes in your environment that have run swift-setup, and that is not allowed'
-  end
-end
-
 platform_options = node['openstack']['object-storage']['platform']
 
 # upgrade platform-specific packages
@@ -83,8 +68,9 @@ when 'keystone'
   end
   identity_endpoint = internal_endpoint 'identity-internal'
   identity_admin_endpoint = admin_endpoint 'identity-admin'
-  service_pass = get_password 'service', 'openstack-object-storage'
-
+  data_bag_name = 'service_passwords'
+  data_bag_item = Chef::EncryptedDataBagItem.load(data_bag_name, 'openstack-object-storage')
+  service_pass = data_bag_item['openstack-object-storage']
   auth_uri = auth_uri_transform identity_endpoint.to_s, node['openstack']['object-storage']['api']['auth']['version']
   identity_uri = identity_uri_transform(identity_admin_endpoint)
 end
@@ -97,7 +83,7 @@ end
 directory '/var/cache/swift' do
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00700
+  mode 0o0700
 end
 
 proxy_service_name = svc_name('swift-proxy')
@@ -131,7 +117,7 @@ template '/etc/swift/proxy-server.conf' do
   source 'proxy-server.conf.erb'
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00600
+  mode 0o0600
   variables(
     'authmode' => node['openstack']['object-storage']['authmode'],
     'bind_host' => proxy_api_bind_host,
