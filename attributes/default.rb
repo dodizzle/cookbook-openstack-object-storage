@@ -235,8 +235,8 @@ default['openstack']['object-storage']['statistics']['recon_object_cache'] = '/v
 
 # Deprecated in Juno, use Common attributes instead
 # proxy servers
-default['openstack']['object-storage']['network']['proxy-bind-ip']            = nil
-default['openstack']['object-storage']['network']['proxy-bind-port']          = nil
+default['openstack']['object-storage']['network']['proxy-bind-ip']            = '0.0.0.0'
+default['openstack']['object-storage']['network']['proxy-bind-port']          = '8080'
 default['openstack']['object-storage']['network']['proxy-cidr']               = '127.0.0.0/8'
 
 # account servers
