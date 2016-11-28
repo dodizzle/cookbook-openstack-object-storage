@@ -20,7 +20,6 @@ end
 
 case @authmode
 when 'keystone'
-  pipeline << 'authtoken'
   pipeline << 'keystoneauth'
 when 'swauth'
   pipeline << 'swauth'
