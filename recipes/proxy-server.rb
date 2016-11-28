@@ -103,7 +103,7 @@ else
   authkey = swift_secrets['swift_authkey']
 end
 
-proxy_api_bind = endpoint 'object-storage-api-bind'
+# proxy_api_bind = endpoint 'object-storage-api-bind'
 
 proxy_api_bind_port = node['openstack']['object-storage']['network']['proxy-bind-port']
 proxy_api_bind_port = proxy_api_bind.port if proxy_api_bind_port.nil?
