@@ -66,6 +66,9 @@ when 'keystone'
   package 'python-keystoneclient' do
     action :upgrade
   end
+  
+  package "python-keystonemiddleware"
+
   identity_endpoint = internal_endpoint 'identity-internal'
   identity_admin_endpoint = admin_endpoint 'identity-admin'
   data_bag_name = 'service_passwords'
