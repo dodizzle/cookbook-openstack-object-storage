@@ -56,11 +56,6 @@ disks.each do |disk|
   end
 end
 
-# FIXME: "#{x}1" is only really valid for {v,s,h}dx.  Doesn't
-# work for loop or probably for hp-style /dev/cciss/c0d0p1x0t0g0m1whatever
-#
-# additionally, there is an implicit assumption that bind ports
-# for all object/container/account services are on the same net
 disk_ip = node['ipaddress']
 
 openstack_object_storage_mounts '/srv/node' do
