@@ -47,3 +47,6 @@ container_time = <%= node['openstack']['object-storage']["container-server"]["co
 [filter:recon]
 use = egg:swift#recon
 recon_cache_path = /var/cache/swift
+
+[filter:healthcheck]
+use = egg:swift#healthcheck

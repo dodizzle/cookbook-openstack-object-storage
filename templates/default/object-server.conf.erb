@@ -33,3 +33,6 @@ reclaim_age = <%= node['openstack']['object-storage']['object-server']['replicat
 [object-updater]
 
 [object-auditor]
+
+[filter:healthcheck]
+use = egg:swift#healthcheck
