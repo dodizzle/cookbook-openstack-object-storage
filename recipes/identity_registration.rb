@@ -61,7 +61,7 @@ end
 openstack_identity_register 'Register Object Storage Endpoint' do
   auth_uri auth_url
   bootstrap_token token
-  service_type 'object-storage'
+  service_type 'object-store'
   endpoint_region region
   endpoint_adminurl admin_api_endpoint.to_s
   endpoint_internalurl internal_api_endpoint.to_s
