@@ -15,7 +15,7 @@ log_statsd_metric_prefix = <%= node['openstack']['object-storage']['statistics']
 <% end %>
 
 [pipeline:main]
-pipeline = account-server
+pipeline = healthcheck recon account-server
 
 [app:account-server]
 use = egg:swift#account
@@ -25,3 +25,7 @@ use = egg:swift#account
 [account-auditor]
 
 [account-reaper]
+
+[filter:recon]
+use = egg:swift#recon
+recon_cache_path = /var/cache/swift

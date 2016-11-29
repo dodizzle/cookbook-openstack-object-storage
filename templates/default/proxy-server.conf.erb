@@ -79,7 +79,7 @@ bind_port = 8080
 [pipeline:main]
 # This sample pipeline uses tempauth and is used for SAIO dev work and
 # testing. See below for a pipeline using keystone.
-pipeline = catch_errors gatekeeper healthcheck proxy-logging cache container_sync bulk tempurl ratelimit tempauth container-quotas account-quotas slo dlo versioned_writes proxy-logging proxy-server
+pipeline = catch_errors gatekeeper healthcheck proxy-logging cache container_sync bulk ratelimit container-quotas account-quotas slo dlo versioned_writes proxy-logging proxy-server
 
 # The following pipeline shows keystone integration. Comment out the one
 # above and uncomment this one. Additional steps for integrating keystone are
@@ -136,7 +136,7 @@ use = egg:swift#proxy
 #
 # If set to 'true' authorized accounts that do not yet exist within the Swift
 # cluster will be automatically created.
-account_autocreate = true
+account_autocreate = True
 #
 # If set to a positive value, trying to create a container when the account
 # already has at least this maximum containers will result in a 403 Forbidden.
@@ -307,8 +307,8 @@ user_test5_tester5 = testing5 service
 paste.filter_factory = keystonemiddleware.auth_token:filter_factory
 auth_uri = <%= @auth_uri %>:5000
 auth_url = <%= @auth_uri %>:35357
+memcached_servers = <%= @auth_uri %>:11211
 auth_type = password
-auth_plugin = password
 project_domain_id = default
 user_domain_id = default
 project_name = service

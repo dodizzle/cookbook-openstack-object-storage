@@ -15,13 +15,16 @@ log_statsd_metric_prefix = <%= node['openstack']['object-storage']['statistics']
 <% end %>
 
 [pipeline:main]
-pipeline = recon object-server
+pipeline = healthcheck recon object-server
 
 [app:object-server]
 use = egg:swift#object
 
 [filter:recon]
 use = egg:swift#recon
+recon_cache_path = /var/cache/swift
+recon_lock_path = /var/lock
+
 
 [object-replicator]
 run_pause = <%= node['openstack']['object-storage']['object-server']['replicator']['run_pause'] %>
@@ -30,4 +33,3 @@ reclaim_age = <%= node['openstack']['object-storage']['object-server']['replicat
 [object-updater]
 
 [object-auditor]
-

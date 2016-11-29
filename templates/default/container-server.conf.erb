@@ -19,7 +19,7 @@ allowed_sync_hosts = <%= node['openstack']['object-storage']["container-server"]
 <% end -%>
 
 [pipeline:main]
-pipeline = container-server
+pipeline = healthcheck recon container-server
 
 [app:container-server]
 use = egg:swift#container
@@ -43,3 +43,7 @@ sync_proxy = <%= node['openstack']['object-storage']["container-server"]["contai
 interval = <%= node['openstack']['object-storage']["container-server"]["container-sync"]["interval"] %>
 # Maximum amount of time to spend syncing each container per pass
 container_time = <%= node['openstack']['object-storage']["container-server"]["container-sync"]["container_time"] %>
+
+[filter:recon]
+use = egg:swift#recon
+recon_cache_path = /var/cache/swift
