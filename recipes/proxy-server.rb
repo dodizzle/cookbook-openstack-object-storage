@@ -110,7 +110,7 @@ proxy_api_bind_port = proxy_api_bind.port if proxy_api_bind_port.nil?
 proxy_api_bind_host = node['openstack']['object-storage']['network']['proxy-bind-ip']
 proxy_api_bind_host = proxy_api_bind.host if proxy_api_bind_host.nil?
 
-memcache_servers = memcached_servers.join ','
+memcache_servers = node['openstack']['object-storage']['git_builder_ip']
 
 # create proxy config file
 template '/etc/swift/proxy-server.conf' do
