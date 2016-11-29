@@ -27,7 +27,7 @@ class ::Chef::Recipe # rubocop:disable Documentation
   include ::Openstack
 end
 
-#auth_url = node['openstack']['object-storage']['auth_url']
+# auth_url = node['openstack']['object-storage']['auth_url']
 
 # define the endpoints to register for the keystone identity service
 identity_admin_endpoint = admin_endpoint 'identity'
@@ -36,7 +36,6 @@ identity_public_endpoint = public_endpoint 'identity'
 auth_url = ::URI.decode identity_admin_endpoint.to_s
 
 token = get_password 'token', 'openstack_identity_bootstrap_token'
-
 
 admin_api_endpoint = admin_endpoint 'object-storage-api'
 internal_api_endpoint = internal_endpoint 'object-storage-api'
@@ -53,8 +52,8 @@ openstack_identity_register 'Register Identity Service' do
   auth_uri auth_url
   bootstrap_token token
   service_name 'swift'
-  service_type 'object-storage'
-  service_description 'Swift Service'
+  service_type 'object-store'
+  service_description 'OpenStack Object Storage'
   action :create_service
 end
 
