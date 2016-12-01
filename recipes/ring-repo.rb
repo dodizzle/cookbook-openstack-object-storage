@@ -140,6 +140,6 @@ storage_services.each do |_k, _v|
 end
 
 execute 'checkin new ring files to git' do
-  cdw '/etc/swift/ring-workspace/rings'
+  cwd '/etc/swift/ring-workspace/rings'
   command 'git add .; git commit -m "latest rings"; git push'
 end
