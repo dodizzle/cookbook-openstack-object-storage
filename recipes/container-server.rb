@@ -51,6 +51,7 @@ svc_names.values.each do |svc|
   end
 end
 
+memcached_servers  = find_memcached_nodes()
 memcache_servers = memcached_servers.join ','
 
 template '/etc/swift/container-reconciler.conf' do
