@@ -24,7 +24,10 @@ include_recipe 'openstack-object-storage::disks'
 
 class Chef::Recipe # rubocop:disable Documentation
   include ServiceUtils
+  include FindMemcached
 end
+
+find_memcached_nodes
 
 platform_options = node['openstack']['object-storage']['platform']
 
@@ -54,7 +57,7 @@ template '/etc/swift/container-reconciler.conf' do
   source 'container-reconciler.conf.erb'
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00600
+  mode 0o0600
   variables(
     'memcache_servers' => memcache_servers
   )
@@ -64,7 +67,7 @@ template '/etc/swift/container-server.conf' do
   source 'container-server.conf.erb'
   owner node['openstack']['object-storage']['user']
   group node['openstack']['object-storage']['group']
-  mode 00600
+  mode 0o0600
   variables(
     'bind_ip' => node['openstack']['object-storage']['network']['container-bind-ip'],
     'bind_port' => node['openstack']['object-storage']['network']['container-bind-port']
@@ -82,7 +85,7 @@ unless node['openstack']['object-storage']['container-server']['allowed_sync_hos
     source 'container-sync-realms.conf.erb'
     owner node['openstack']['object-storage']['user']
     group node['openstack']['object-storage']['group']
-    mode 00600
+    mode 0o0600
 
     notifies :restart, "service[#{service_name}]", :immediately
   end
