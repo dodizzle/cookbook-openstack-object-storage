@@ -24,6 +24,7 @@ include_recipe 'openstack-object-storage::disks'
 
 class Chef::Recipe # rubocop:disable Documentation
   include ServiceUtils
+  include FindMemcached
 end
 
 platform_options = node['openstack']['object-storage']['platform']
@@ -48,6 +49,7 @@ svc_names.values.each do |svc|
   end
 end
 
+memcached_servers  = find_memcached_nodes()
 memcache_servers = memcached_servers.join ','
 
 template '/etc/swift/object-expirer.conf' do
