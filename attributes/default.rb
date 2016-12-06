@@ -1,4 +1,4 @@
-default['opentack']['swift']['services'] = %w(
+default['openstack']['swift']['services'] = %w(
   account-auditor
   account-reaper
   account-replicator
