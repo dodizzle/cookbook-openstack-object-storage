@@ -6,8 +6,7 @@ directory '/var/log/swift' do
   group 'adm'
 end
 
-
-swift_services = default['openstack']['swift']['services'].join(",")
+swift_services = default['openstack']['swift']['services']
 
 template '/etc/rsyslog.d/51-swift.conf' do
   source '51-swift.conf.erb'
