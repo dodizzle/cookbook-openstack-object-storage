@@ -4,7 +4,7 @@ maintainer_email 'openstack-dev@lists.openstack.org'
 license 'Apache 2.0'
 description 'Installs and configures Openstack Swift'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '13.0.0'
+version '14.0.0'
 
 recipe 'openstack-object-storage::account-server', 'Installs the swift account server'
 recipe 'openstack-object-storage::client', 'Install the swift client'

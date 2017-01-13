@@ -46,7 +46,7 @@
     "openstack-object-storage::proxy-server": "Installs the swift proxy server",
     "openstack-object-storage::setup": "Does initial setup of a swift cluster"
   },
-  "version": "13.0.0",
+  "version": "14.0.0",
   "source_url": "",
   "issues_url": "",
   "privacy": false,
