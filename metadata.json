@@ -1,0 +1,62 @@
+{
+  "name": "openstack-object-storage",
+  "description": "Installs and configures Openstack Swift",
+  "long_description": "# THIS COOKBOOK IS CURRENTLY NOT MAINTAINED AND THERE WILL BE NO REALEASE FOR\nSTABLE/MITAKA. IF YOU ARE INTERESTED IN HELPING MAINTAINING IT, PLEASE JOIN OUR\nWEEKLY MEETING ON IRC OR PING US IN THE #openstack-chef CHANNEL ON freenode.\n\nDescription\n===========\n\nInstalls the OpenStack Object Storage service **Swift** as part of the OpenStack reference deployment Chef for OpenStack. The http://github.com/openstack/chef-openstack-repo contains documentation for using this cookbook in the context of a full OpenStack deployment. Swift is currently installed from packages.\n\nhttps://wiki.openstack.org/wiki/Swift\n\nRequirements\n============\n\nClients\n--------\n\n * CentOS >= 7\n * Ubuntu >= 14.04\n\nChef\n---------\n\n * 12\n\nDependent Cookbooks\n-------------------\n\n * openstack-common\n * openstack-identity\n * memcached\n * statsd\n\nRoles\n=====\n\n * swift-account-server - storage node for account data\n * swift-container-server - storage node for container data\n * swift-management-server - responsible for ring generation\n * swift-object-server - storage node for object server\n * swift-proxy-server - proxy for swift storage nodes\n * swift-setup - server responsible for generating initial settings\n\nThe swift-management-server role performs the following functions:\n\n * proxy node that knows super admin password\n * ring repository and ring building workstation\n * generally always has the swift-setup role too\n * there can only be _one_ swift-management-server\n\nThere *must* be a node with the the swift-management-server role to act\nas the ring repository.\n\nIn small environments, it is likely that all storage machines will\nhave all-in-one roles, with a load balancer ahead of it\n\nIn larger environments, where it is cost effective to split the proxy\nand storage layer, storage nodes will carry\nswift-{account,container,object}-server roles, and there will be\ndedicated hosts with the swift-proxy-server role.\n\nIn really really huge environments, it's possible that the storage\nnode will be split into swift-{container,account}-server nodes and\nswift-object-server nodes.\n\nRecipes\n=======\n\nclient\n----\n- Install the swift client packages\n\nAttributes\n==========\n\nThere are other attributes that must be set depending on authmode.\nFor \"swauth\", the following attributes are used:\n\n * ```default[:swift][:authkey]``` - swauth super admin key if using swauth (defaults to test)\n\nThe following secrets can be defined in the databag defined in Common ['openstack']['secret']['secrets_data_bag']\n\n```\n        {\n          \"swift_hash\": \"1a7c0568fa84\"\n          \"swift_authkey\": \"keY4all\"\n          \"dispersion_auth_user\": \"ops:dispersion\",\n          \"dispersion_auth_key\": \"dispersionpass\"\n        }\n```\n\nIn addition, because swift is typically deployed as a cluster\nthere are some attributes used to find interfaces and ip addresses\non storage nodes:\n\n * ```default[:swift][:git_builder_ip]``` - the IP address of the management server which other cluster members will use as their git pull target for ring updates (defaults to 127.0.0.1)\n * ```default[:swift][:network][:proxy-bind-ip]``` - the IP address to bind to\n   on the proxy servers (defaults to 0.0.0.0 for all addresses)\n * ```default[:swift][:network][:proxy-bind-port]``` - the port to bind to\n   on the proxy servers (defaults to 8080)\n * ```default[:swift][:network][:account-bind-ip]``` - the IP address to bind to\n   on the account servers (defaults to 0.0.0.0 for all addresses)\n * ```default[:swift][:network][:account-bind-port]``` - the port to bind to\n   on the account servers (defaults to 6002)\n * ```default[:swift][:network][:container-bind-ip]``` - the IP address to bind to\n   on the container servers (defaults to 0.0.0.0 for all addresses)\n * ```default[:swift][:network][:container-bind-port]``` - the port to bind to\n   on the container servers (defaults to 6002)\n * ```default[:swift][:network][:object-bind-ip]``` - the IP address to bind to\n   on the object servers (defaults to 0.0.0.0 for all addresses)\n * ```default[:swift][:network][:object-bind-port]``` - the port to bind to\n   on the container servers (defaults to 6002)\n * ```default[:swift][:network][:object-cidr]``` - the CIDR network for your object\n   servers in order to build the ring (defaults to 10.0.0.0/24)\n\nProxy Plugins\n=============\n\nFormpost\n-------\n\n * ```default[:swift][:formpost][:enabled]``` - optionally enable the formpost proxy plugin (defaults to false)\n\nTempURL\n-------\n\n * ```default[:swift][:tempurl][:enabled]``` - optionally enable the tempurl proxy plugin (defaults to false)\n * ```default[:swift][:tempurl][:incoming_remove_headers]``` - The headers to remove from incoming requests (defaults to x-timestamp)\n * ```default[:swift][:tempurl][:incoming_allow_headers]``` - The headers allowed as exceptions to incoming_remove_headers (defaults to empty string)\n * ```default[:swift][:tempurl][:incoming_allow_headers]``` - The headers allowed as exceptions to incoming_remove_headers (defaults to empty string)\n * ```default[:swift][:tempurl][:outgoing_remove_headers]``` - The headers to remove from outgoing responses (defaults to x-object-meta-*)\n * ```default[:swift][:tempurl][:outgoing_allow_headers]``` - The headers allowed as exceptions to outgoing_remove_headers (defaults x-object-meta-public-*)\n\nDomain Remap\n------------\n\n * ```default[:swift][:domain_remap][:enabled]``` - optionally enable the domain remap proxy plugin (defaults to false)\n * ```default[:swift][:domain_remap][:storage_domain]``` - The domain remap reseller domain (defaults to example.com)\n * ```default[:swift][:domain_remap][:root_path]``` - The domain remap root path (defaults to v1)\n * ```default[:swift][:domain_remap][:reseller_prefixes]``` - The domain remap reseller prefixes (defaults to AUTH)\n\nStaticweb\n----------\n\n * ```default[:swift][:staticweb][:enabled]``` - optionally enable the staticweb proxy plugin (defaults to false)\n * ```default[:swift][:staticweb][:cache_timeout]``` - Seconds to cache container x-container-meta-web-* header values (defaults to 300)\n\nExamples\n========\n\nExample environment\n-------------------\n\n```json\n{\n  \"default_attributes\": {\n    \"swift\": {\n        \"swift_hash\": \"107c0568ea84\",\n        \"authmode\": \"swauth\",\n        \"authkey\": \"test\",\n        \"auto_rebuild_rings\": false,\n        \"git_builder_ip\": \"10.0.0.10\",\n        \"swauth\": {\n            \"url\": \"http://10.0.0.10:8080/v1/\"\n      }\n    }\n  },\n  \"name\": \"swift\",\n  \"chef_type\": \"environment\",\n  \"json_class\": \"Chef::Environment\"\n}\n```\n\nThis sets up defaults for a swauth-based cluster with the storage\nnetwork on 10.0.0.0/24.\n\nStandalone Storage Server\n-------------------------\n\n```json\n{\n  \"name\": \"swift-object-server\",\n  \"json_class\": \"Chef::Role\",\n  \"run_list\": [\n    \"recipe[swift::object-server]\"\n  ],\n  \"description\": \"A storage server role.\",\n  \"chef_type\": \"role\"\n}\n```\n\nStandalone Proxy Server\n-----------------------\n\n```json\n  \"run_list\": [\n    \"role[swift-proxy-server]\"\n  ]\n```\n\nTesting\n=======\n\nPlease refer to the [TESTING.md](TESTING.md) for instructions for testing the cookbook.\n\nBerkshelf\n=========\n\nBerks will resolve version requirements and dependencies on first run and\nstore these in Berksfile.lock. If new cookbooks become available you can run\n`berks update` to update the references in Berksfile.lock. Berksfile.lock will\nbe included in stable branches to provide a known good set of dependencies.\nBerksfile.lock will not be included in development branches to encourage\ndevelopment against the latest cookbooks.\n\nLicense and Author\n==================\n\n|                      |                                                    |\n|:---------------------|:---------------------------------------------------|\n| **Author**           |  Alan Meadows (<alan.meadows@gmail.com>)           |\n| **Author**           |  Oisin Feeley (<of3434@att.com>)                   |\n| **Author**           |  Ron Pedde (<ron.pedde@rackspace.com>)             |\n| **Author**           |  Will Kelly (<will.kelly@rackspace.com>)           |\n| **Author**           |  Chen Zhiwei (<zhiwchen@cn.ibm.com>)               |\n| **Author**           |  Mark Vanderwiel (<vanderwl@us.ibm.com>)           |\n| **Author**           |  Jan Klare (<j.klare@x-ion.de>)                    |\n|                      |                                                    |\n| **Copyright**        |  Copyright (c) 2013, AT&T, Inc.                    |\n| **Copyright**        |  Copyright (c) 2012, Rackspace US, Inc.            |\n| **Copyright**        |  Copyright (c) 2013-2015 IBM, Corp.                |\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n",
+  "maintainer": "openstack-chef",
+  "maintainer_email": "openstack-dev@lists.openstack.org",
+  "license": "Apache 2.0",
+  "platforms": {
+    "centos": ">= 0.0.0",
+    "ubuntu": ">= 0.0.0",
+    "redhat": ">= 0.0.0"
+  },
+  "dependencies": {
+    "memcached": ">= 1.7.2",
+    "statsd": ">= 0.1.6",
+    "openstack-common": ">= 14.0.0",
+    "openstack-identity": ">= 14.0.0"
+  },
+  "recommendations": {
+
+  },
+  "suggestions": {
+
+  },
+  "conflicting": {
+
+  },
+  "providing": {
+
+  },
+  "replacing": {
+
+  },
+  "attributes": {
+
+  },
+  "groupings": {
+
+  },
+  "recipes": {
+    "openstack-object-storage::account-server": "Installs the swift account server",
+    "openstack-object-storage::client": "Install the swift client",
+    "openstack-object-storage::container-server": "Installs the swift container server",
+    "openstack-object-storage::management-server": "Installs the swift management server",
+    "openstack-object-storage::object-server": "Installs the swift object server",
+    "openstack-object-storage::proxy-server": "Installs the swift proxy server",
+    "openstack-object-storage::setup": "Does initial setup of a swift cluster"
+  },
+  "version": "13.0.0",
+  "source_url": "",
+  "issues_url": "",
+  "privacy": false,
+  "chef_versions": [
+
+  ],
+  "ohai_versions": [
+
+  ],
+  "gems": [
+
+  ]
+}
