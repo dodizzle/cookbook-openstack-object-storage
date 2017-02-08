@@ -74,18 +74,17 @@ openstack_service 'swift' do
   connection_params connection_params
 end
 
-=begin
-# Register Object Storage Service
-openstack_identity_register 'Register Identity Service' do
-  auth_uri auth_url
-  bootstrap_token token
-  service_name 'swift'
-  service_type 'object-store'
-  service_description 'OpenStack Object Storage'
-  action :create_service
-end
-
 # Register Object Storage Endpoint
+interfaces.each do |interface, res|
+  openstack_endpoint 'swift' do
+    service_name 'object-store'
+    interface interface.to_s
+    url res[:url].to_s
+    region region
+    connection_params connection_params
+  end
+end
+=begin
 openstack_identity_register 'Register Object Storage Endpoint' do
   auth_uri auth_url
   bootstrap_token token
