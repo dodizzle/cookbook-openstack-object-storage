@@ -121,3 +121,4 @@ openstack_identity_register "Grant '#{service_role}' Role to #{service_user} Use
 
   action :grant_role
 end
+=end
