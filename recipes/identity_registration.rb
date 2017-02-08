@@ -47,6 +47,28 @@ service_user = node['openstack']['object-storage']['service_user']
 service_role = node['openstack']['object-storage']['service_role']
 region = node['openstack']['object-storage']['region']
 
+#######
+identity_admin_endpoint = admin_endpoint 'identity'
+
+auth_url = ::URI.decode identity_admin_endpoint.to_s
+
+interfaces = {
+  public: { url: public_endpoint('object-storage-api') },
+  internal: { url: internal_endpoint('object-storage-api') },
+  admin: { url: admin_endpoint('object-storage-api') }
+}
+admin_user = node['openstack']['identity']['admin_user']
+admin_pass = get_password 'user', admin_user
+admin_project = node['openstack']['identity']['admin_project']
+admin_domain = node['openstack']['identity']['admin_domain_name']
+connection_params = {
+  openstack_auth_url:     "#{auth_url}/auth/tokens",
+  openstack_username:     admin_user,
+  openstack_api_key:      admin_pass,
+  openstack_project_name: admin_project,
+  openstack_domain_name:    admin_domain
+}
+=begin
 # Register Object Storage Service
 openstack_identity_register 'Register Identity Service' do
   auth_uri auth_url
