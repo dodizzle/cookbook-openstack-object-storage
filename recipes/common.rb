@@ -33,10 +33,11 @@ include_recipe 'openstack-common::sysctl'
 #-------------
 
 # optionally statsd daemon for stats collection
-if node['openstack']['object-storage']['statistics']['enabled']
-  node.set['statsd']['relay_server'] = true
-  include_recipe 'statsd::server'
-end
+
+#if node['openstack']['object-storage']['statistics']['enabled']
+#  node.set['statsd']['relay_server'] = true
+#  include_recipe 'statsd::server'
+#end
 
 # find graphing server address
 if Chef::Config[:solo] && !node['recipes'].include?('chef-solo-search')
