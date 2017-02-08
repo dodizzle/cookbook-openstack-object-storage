@@ -84,27 +84,13 @@ interfaces.each do |interface, res|
     connection_params connection_params
   end
 end
-=begin
-openstack_identity_register 'Register Object Storage Endpoint' do
-  auth_uri auth_url
-  bootstrap_token token
-  service_type 'object-store'
-  endpoint_region region
-  endpoint_adminurl admin_api_endpoint.to_s
-  endpoint_internalurl internal_api_endpoint.to_s
-  endpoint_publicurl public_api_endpoint.to_s
-  action :create_endpoint
-end
 
 # Register Service Tenant
-openstack_identity_register 'Register Service Tenant' do
-  auth_uri auth_url
-  bootstrap_token token
-  tenant_name service_tenant_name
-  tenant_description 'Service Tenant'
-  action :create_tenant
+openstack_project service_tenant_name do
+  connection_params connection_params
 end
 
+=begin
 # Register Service User
 openstack_identity_register "Register #{service_user} User" do
   auth_uri auth_url
