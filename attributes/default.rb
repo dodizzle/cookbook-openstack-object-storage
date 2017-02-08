@@ -16,7 +16,7 @@ default['openstack']['swift']['services'] = %w(
   proxy-server
   swift
 )
-
+default['openstack']['object-storage']['statistics']['enabled'] = false
 default['openstack']['object-storage']['service_tenant_name'] = 'service'
 default['openstack']['object-storage']['service_user'] = 'swift'
 default['openstack']['object-storage']['service_role'] = 'service'
