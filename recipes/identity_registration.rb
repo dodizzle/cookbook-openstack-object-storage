@@ -68,6 +68,12 @@ connection_params = {
   openstack_project_name: admin_project,
   openstack_domain_name:    admin_domain
 }
+# Register Object Storage Service
+openstack_service 'swift' do
+  type 'object-store'
+  connection_params connection_params
+end
+
 =begin
 # Register Object Storage Service
 openstack_identity_register 'Register Identity Service' do
