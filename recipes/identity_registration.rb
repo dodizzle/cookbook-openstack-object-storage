@@ -76,8 +76,8 @@ end
 
 # Register Object Storage Endpoint
 interfaces.each do |interface, res|
-  openstack_endpoint 'swift' do
-    service_name 'object-store'
+  openstack_endpoint 'object-store' do
+    service_name 'swift'
     interface interface.to_s
     url res[:url].to_s
     region region
