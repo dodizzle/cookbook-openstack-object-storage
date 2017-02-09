@@ -98,15 +98,19 @@ openstack_user service_user do
   connection_params connection_params
 end
 
-=begin
-## Grant Service role to Service User for Service Tenant ##
-openstack_identity_register "Grant '#{service_role}' Role to #{service_user} User for #{service_tenant_name} Tenant" do
-  auth_uri auth_url
-  bootstrap_token token
-  tenant_name service_tenant_name
-  user_name service_user
+# Grant Service role to Service User for Service Tenant ##
+openstack_user service_user do
   role_name service_role
-
+  project_name service_project
+  connection_params connection_params
   action :grant_role
 end
-=end
+
+# Grant default domain to user with role of Service Tenant ##
+openstack_user service_user do
+  domain_name 'Default'
+  role_name service_role
+  user_name service_user
+  connection_params connection_params
+  action :grant_domain
+end
