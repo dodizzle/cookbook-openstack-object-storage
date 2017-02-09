@@ -237,7 +237,7 @@ action :ensure_exists do
     when 'xfs'
       if Mixlib::ShellOut.new("xfs_admin -l #{device}").run_command.error?
         Chef::Log.info("Creating file system on #{device} for type #{params[:type]}")
-        cmd = Mixlib::ShellOut.new("mkfs.xfs -L swift -f -i size=512 #{device}").run_command
+        cmd = Mixlib::ShellOut.new("mkfs.xfs -L swift -m crc=0,finobt=0 -f -i size=512 #{device}").run_command
         Chef::Log.info("Created file system on #{device} for type #{params[:type]} out:#{cmd.stdout.strip} err:#{cmd.stderr.strip}")
         update = true
       end
