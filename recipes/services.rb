@@ -15,5 +15,6 @@
    swift-proxy).each do |svc|
   service svc do
     action :start
+    provider Chef::Provider::Service::Init::Debian, service
   end
 end
