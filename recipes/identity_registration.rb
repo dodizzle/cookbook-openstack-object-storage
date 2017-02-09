@@ -101,7 +101,7 @@ end
 # Grant Service role to Service User for Service Tenant ##
 openstack_user service_user do
   role_name service_role
-  project_name service_project
+  project_name 'admin'
   connection_params connection_params
   action :grant_role
 end
