@@ -45,6 +45,7 @@ svc_names.values.each do |svc|
   service svc do
     supports status: false, restart: true
     action [:enable, :start]
+    provider Chef::Provider::Service::Init::Debian
     only_if '[ -e /etc/swift/object-server.conf ] && [ -e /etc/swift/object.ring.gz ]'
   end
 end

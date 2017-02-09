@@ -94,6 +94,7 @@ proxy_service_name = svc_name('swift-proxy')
 service proxy_service_name do
   supports status: true, restart: true
   action [:enable, :start]
+  provider Chef::Provider::Service::Init::Debian
   only_if '[ -e /etc/swift/proxy-server.conf ] && [ -e /etc/swift/object.ring.gz ]'
 end
 
