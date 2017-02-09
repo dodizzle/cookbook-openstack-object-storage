@@ -126,7 +126,7 @@ action :ensure_exists do
     when 'xfs'
       mount_options = case node['platform_family']
                       when 'debian'
-                        'noatime,nodiratime,nobarrier,logbufs=8,nobootwait'
+                        'noatime,nodiratime,nobarrier,logbufs=8'
                       else
                         'noatime,nodiratime,nobarrier,logbufs=8'
                       end
