@@ -90,18 +90,15 @@ openstack_project service_tenant_name do
   connection_params connection_params
 end
 
-=begin
 # Register Service User
-openstack_identity_register "Register #{service_user} User" do
-  auth_uri auth_url
-  bootstrap_token token
-  tenant_name service_tenant_name
-  user_name service_user
-  user_pass service_pass
-
-  action :create_user
+openstack_user service_user do
+  project_name 'admin'
+  role_name service_role
+  password service_pass
+  connection_params connection_params
 end
 
+=begin
 ## Grant Service role to Service User for Service Tenant ##
 openstack_identity_register "Grant '#{service_role}' Role to #{service_user} User for #{service_tenant_name} Tenant" do
   auth_uri auth_url
