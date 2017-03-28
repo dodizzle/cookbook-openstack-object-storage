@@ -18,7 +18,7 @@ recipe 'openstack-object-storage::setup', 'Does initial setup of a swift cluster
   supports os
 end
 
-depends 'memcached', '>= 1.7.2'
+depends 'memcached', '>= 3.0.3'
 depends 'statsd', '>= 0.1.6'
 depends 'openstack-common', '= 13.0.0'
 depends 'openstack-identity', '= 13.0.0'
