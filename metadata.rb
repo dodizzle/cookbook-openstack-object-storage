@@ -14,11 +14,11 @@ recipe 'openstack-object-storage::object-server', 'Installs the swift object ser
 recipe 'openstack-object-storage::proxy-server', 'Installs the swift proxy server'
 recipe 'openstack-object-storage::setup', 'Does initial setup of a swift cluster'
 
-%w(centos ubuntu redhat).each do |os|
+%w(ubuntu).each do |os|
   supports os
 end
 
 depends 'memcached', '>= 1.7.2'
 depends 'statsd', '>= 0.1.6'
-depends 'openstack-common', '>= 13.0.0'
-depends 'openstack-identity', '>= 13.0.0'
+depends 'openstack-common', '= 13.0.0'
+depends 'openstack-identity', '= 13.0.0'
