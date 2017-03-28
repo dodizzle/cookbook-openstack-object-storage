@@ -9,8 +9,7 @@
     "ubuntu": ">= 0.0.0"
   },
   "dependencies": {
-    "memcached": ">= 1.7.2",
-    "statsd": ">= 0.1.6",
+    "memcached": ">= 3.0.3",
     "openstack-common": "= 13.0.0",
     "openstack-identity": "= 13.0.0"
   },
