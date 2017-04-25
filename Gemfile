@@ -12,3 +12,5 @@ gem 'chefspec', '~> 4.0.0'
 gem 'rspec', '~> 3.0.0'
 gem 'foodcritic', '~> 4.0'
 gem 'rubocop', '~> 0.29.1'
+gem "test-kitchen"
+gem "kitchen-vagrant"
