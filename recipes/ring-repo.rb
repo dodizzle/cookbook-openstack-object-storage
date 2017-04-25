@@ -145,5 +145,4 @@ openstack_object_storage_ring_script '/etc/swift/ring-workspace/generate-rings.s
   mode 00700
   ring_path '/etc/swift/ring-workspace/rings'
   action :ensure_exists
-  notifies :run, 'bash[rebuild-rings]', :immediate
 end
