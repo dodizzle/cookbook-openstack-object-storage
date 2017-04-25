@@ -77,7 +77,7 @@ def generate_script # rubocop:disable Metrics/AbcSize
     disk_data[:available][which] ||= {}
 
     disk_state.each do |swiftnode|
-      Chef::Log.info("#{which} node: #{swiftnode[:ipaddress]} state:\n#{swiftnode[:ipaddress]}")
+      Chef::Log.info("#{which} node: #{swiftnode[:ip]} state:\n#{swiftnode[:ip]}")
       if swiftnode['openstack']['object-storage']['state']['devs']
         swiftnode['openstack']['object-storage']['state']['devs'].each do |k, v|
           disk_data[which][v[:ip]] = disk_data[which][v[:ip]] || {}
@@ -90,7 +90,7 @@ def generate_script # rubocop:disable Metrics/AbcSize
           disk_data[:available][which][v[:mountpoint]] = v[:ip]
 
           unless v[:mounted]
-            dirty_cluster_reasons << "Disk #{v[:name]} (#{v[:uuid]}) is not mounted on host #{v[:ip]} (#{swiftnode[:ipaddress]})"
+            dirty_cluster_reasons << "Disk #{v[:name]} (#{v[:uuid]}) is not mounted on host #{v[:ip]} (#{swiftnode[:ip]})"
           end
         end
       end
