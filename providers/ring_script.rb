@@ -68,15 +68,15 @@ def generate_script # rubocop:disable Metrics/AbcSize
     # figure out what's present in the cluster
     disk_data[which] = {}
     role = "iforms_openstack_swift_storage"
-    disk_state = Chef::Search::Query.new.search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}")
+    disk_state = Chef::Search::Query.new.search(:node, "chef_environment:iforms_cloud AND roles:iforms_openstack_swift_storage")
     Chef::Log.info("#{which} node count: #{disk_state.count} for role: #{role}")
 
     # for a running track of available disks
     disk_data[:available] ||= {}
     disk_data[:available][which] ||= {}
-
+#Chef::Log.info("ZZZZZZZZZZZZZZZZZ #{swiftnode[:hostname]}")
     disk_state.each do |swiftnode|
-      Chef::Log.info("ZZZZZZZZZZZZZZZZZ #{swiftnode[:hostname]}")
+
       if swiftnode['openstack']['object-storage']['state']['devs']
         swiftnode['openstack']['object-storage']['state']['devs'].each do |k, v|
           disk_data[which][v[:ip]] = disk_data[which][v[:ip]] || {}
