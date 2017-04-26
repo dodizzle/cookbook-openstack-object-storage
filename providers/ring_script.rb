@@ -67,8 +67,7 @@ def generate_script # rubocop:disable Metrics/AbcSize
 
     # figure out what's present in the cluster
     disk_data[which] = {}
-    role = node['openstack']['object-storage']["#{which}_server_chef_role"]
-    puts 'role => ' + role
+    role = "iforms_openstack_swift_storage"
     disk_state = Chef::Search::Query.new.search(:node, "chef_environment:#{node.chef_environment} AND roles:#{role}")
     Chef::Log.info("#{which} node count: #{disk_state.count} for role: #{role}")
 
@@ -77,7 +76,6 @@ def generate_script # rubocop:disable Metrics/AbcSize
     disk_data[:available][which] ||= {}
 
     disk_state.each do |swiftnode|
-      Chef::Log.info("#{which} node: #{swiftnode[:ip]} state:\n#{swiftnode[:ip]}")
       if swiftnode['openstack']['object-storage']['state']['devs']
         swiftnode['openstack']['object-storage']['state']['devs'].each do |k, v|
           disk_data[which][v[:ip]] = disk_data[which][v[:ip]] || {}
@@ -90,7 +88,7 @@ def generate_script # rubocop:disable Metrics/AbcSize
           disk_data[:available][which][v[:mountpoint]] = v[:ip]
 
           unless v[:mounted]
-            dirty_cluster_reasons << "Disk #{v[:name]} (#{v[:uuid]}) is not mounted on host #{v[:ip]} (#{swiftnode[:ip]})"
+            dirty_cluster_reasons << "Disk #{v[:name]} (#{v[:uuid]}) is not mounted on host #{v[:ip]} (#{swiftnode[:hostname]})"
           end
         end
       end
