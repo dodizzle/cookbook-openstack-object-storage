@@ -76,6 +76,7 @@ def generate_script # rubocop:disable Metrics/AbcSize
     disk_data[:available][which] ||= {}
 
     disk_state.each do |swiftnode|
+      Chef::Log.info("ZZZZZZZZZZZZZZZZZ #{swiftnode[:hostname]})"
       if swiftnode['openstack']['object-storage']['state']['devs']
         swiftnode['openstack']['object-storage']['state']['devs'].each do |k, v|
           disk_data[which][v[:ip]] = disk_data[which][v[:ip]] || {}
