@@ -114,3 +114,7 @@ openstack_user service_user do
   connection_params connection_params
   action :grant_domain
 end
+
+openstack_role 'swift_storage' do
+  connection_params connection_params
+end
